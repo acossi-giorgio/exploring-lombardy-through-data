@@ -1,0 +1,13 @@
+datasets
+__pycache__
+cache
+*.json
+*.log
+*.geojson
+*.bkp
+*.ipynb_checkpoints
+*.pyc
+*.aux
+*.out
+*.log
+*.toc

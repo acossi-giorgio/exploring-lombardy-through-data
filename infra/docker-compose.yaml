@@ -1,0 +1,29 @@
+version: "3.9"
+
+services:
+  pap_postgres:
+    image: postgres:17
+    container_name: pap_postgres_db
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: pap
+    ports:
+      - "5432:5432"
+    volumes:
+      - pap_postgres_data:/var/lib/postgresql/data
+
+  pap_pgadmin:
+    image: dpage/pgadmin4:9.14.0
+    container_name: pap_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "8080:80"
+    depends_on:
+      - pap_postgres
+
+volumes:
+  pap_postgres_data:
+  superset_home:

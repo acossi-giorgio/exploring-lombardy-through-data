@@ -1,0 +1,14 @@
+sqlalchemy
+psycopg2
+pandas
+geopandas
+numpy
+shapely
+osmnx
+tabulate
+matplotlib
+seaborn
+scikit-learn
+mlxtend
+jupyter
+holidays
