@@ -773,13 +773,14 @@ class Source(ABC):
 		\includegraphics[width=\textwidth]{./images/1_air_quality/hierarchical_stats_combined.png}
 	\end{figure}
 
-	The high \textbf{O$_3$} in rural areas is no surprise. NO from urban traffic scavenges ozone before it builds up, so dense areas end up with lower O$_3$ than their rural surroundings.
+	
 
 	\textbf{PM$_{10}$} and \textbf{PM$_{2.5}$} show almost no gradient across urbanization levels. Concentrations even peak in \textbf{Intermediate} areas. Particulate matter is a \textbf{regional problem}, not an urban one.
 
 	\textbf{PM$_{2.5}$} stands apart. It is the only pollutant whose annual mean exceeds the limit in \emph{all} three urbanization categories, uniformly. That alone sets it apart from the rest and argues for region-wide structural measures rather than city-level fixes.
 
-	No single urbanization level dominates across all pollutants. Dense areas lead for \textbf{NO$_2$}. Intermediate zones are worst for \textbf{PM$_{10}$} and \textbf{PM$_{2.5}$} evidence of non-traffic sources. Rural areas top the chart for \textbf{O$_3$} because of reduced NO titration.
+	 Pollutants patterns vary across urbanization levels. Dense areas are characterized by higher \textbf{NO$_2$} concentrations, rural areas by elevated \textbf{O$_3$} livels linked to reduced NO titration, 
+	 while intermediate zones show the highest \textbf{PM$_{10}$} and \textbf{PM$_{2.5}$} concentrations.
 
 	\subsubsection{Are there municipalities that repeatedly experience multi-day episodes of pollution above health-based thresholds?}
 	
@@ -790,7 +791,7 @@ class Source(ABC):
 		\includegraphics[width=\textwidth]{./images/1_air_quality/critical_episodes_combined.png}
 	\end{figure}
 	
-	Seasonality is strong. Exceedances cluster in predictable calendar windows.
+	 Exceedances cluster in predictable calendar windows.
 
 	Two cases break the pattern. \textbf{Cinisello Balsamo} registers an NO$_2$ episode in mid-summer, when traffic is typically low. That is unusual and suggests a local non-traffic source. \textbf{Moggio} shows O$_3$ exceedances from May all the way to October far longer than anywhere else. Its altitude, exposure, and low local NO emissions probably explain why ozone persists there well outside the normal summer window.
 
@@ -821,8 +822,9 @@ class Source(ABC):
 		\end{minipage}
 	\end{figure}
 
-	\textbf{Cluster 1} contains most of the monitored municipalities. \textbf{Cluster 0} picks up a smaller, more polluted subset. \textbf{Cluster 2} consists of a \textbf{single municipality}: its profile is so different from everything else that it ends up alone. It is best read as an outlier, not a representative group.
+	\textbf{Cluster 0} contains most of the monitored municipalities. \textbf{Cluster 2} picks up a smaller, more polluted subset. \textbf{Cluster 1} consists of a \textbf{single municipality}: its profile is so different from everything else that it ends up alone. It is best read as an outlier, not a representative group.
 	
+	\newpage
 	\textbf{Weekly Seasonal trends} \\
 	\begin{figure}[H]
 		\centering
@@ -832,10 +834,10 @@ class Source(ABC):
 	
 	The seasonal shape is similar everywhere: primary pollutants (NO$_2$, PM$_{10}$, PM$_{2.5}$) peak in winter and drop through spring and summer; O$_3$ does the opposite, peaking in summer.
 
-	\textbf{Cluster 0} is the dirtiest group. Its primary-pollutant concentrations are the highest year-round, and in winter both PM$_{2.5}$ and NO$_2$ regularly breach guideline levels.
+	\textbf{Cluster 2} is the dirtiest group. Its primary-pollutant concentrations are the highest year-round, and in winter both PM$_{2.5}$ and NO$_2$ regularly breach guideline levels.
 
-	\textbf{Cluster 1} sits near the regional average. \textbf{Cluster 2}, the lone municipality, has readings extreme enough to form its own cluster, confirming it is a statistical outlier.
-
+	\textbf{Cluster 0} sits near the regional average. \textbf{Cluster 1}, the lone municipality, has readings extreme enough to form its own cluster, confirming it is a statistical outlier.
+	
 	\textbf{Cluster Pollution Index} \\
 	\begin{table}[H]
 		\centering
@@ -851,7 +853,7 @@ class Source(ABC):
 		\caption*{Cluster Pollution Index.}
 	\end{table}
 
-	The ranking matches the trend charts. \textbf{Cluster 2} has the highest index (0.887), but that is driven by one municipality. \textbf{Cluster 0} comes next at 0.779, the dirtiest multi-municipality group. \textbf{Cluster 1} is well below at 0.471.
+	 \textbf{Cluster 2} has the highest index (0.887), but that is driven by one municipality. \textbf{Cluster 0} comes next at 0.779, the dirtiest multi-municipality group. \textbf{Cluster 1} is well below at 0.471.
 	
 	\newpage
 	\subsubsection{Which municipalities are most polluted with particulate matter?}
@@ -938,13 +940,11 @@ class Source(ABC):
 		\caption*{PM$_{10}$ top-5 appearances by urbanization level.}
 	\end{table}
 
-	Comparing the baseline shares to top-5 appearances tells a consistent story. Dense municipalities are \textbf{under-represented} relative to their share of the monitoring network; Intermediate and Rural areas are \textbf{over-represented} for both pollutants.
+	 Dense municipalities are \textbf{under-represented} relative to their share of the monitoring network; Intermediate and Rural areas are \textbf{over-represented} for both pollutants.
 
 	The gap is widest for PM$_{10}$: Intermediate municipalities make up 68.3\% of appearances versus a 56\% baseline, while Dense areas drop to 13.3\% against 23\%. One plausible reading is that urban traffic restrictions and centralized heating regulations are doing their job in large cities, but peripheral industrial and agricultural zones remain outside current policy reach.
 
 	For PM$_{2.5}$, Rural municipalities appear in 28.3\% of slots versus a 21\% baseline. That pattern fits biomass burning and agricultural emissions sources that urban air quality frameworks barely touch. 
-	
-	Particulate pollution is not just a city problem, and abatement strategies need to look beyond municipal boundaries.
 
 	\newpage
 	
@@ -959,10 +959,11 @@ class Source(ABC):
 		\includegraphics[width=0.5\textwidth]{./images/2_weather_pollution/correlation_heatmap.png}
 	\end{figure}
 	
-	Two opposite regimes are visible. \textbf{O$_3$} correlates strongly with radiation and temperature (0.76 and 0.75), no surprise given its photochemical origin. The primary pollutants (NO$_2$, PM$_{10}$, PM$_{2.5}$) go the other way, showing negative correlations with the same variables: they accumulate under cold, stagnant, low-radiation conditions.
+	 \textbf{O$_3$} correlates strongly with radiation and temperature (0.76 and 0.75), no surprise given its photochemical origin. The primary pollutants (NO$_2$, PM$_{10}$, PM$_{2.5}$) go the other way, showing negative correlations with the same variables: they accumulate under cold, stagnant, low-radiation conditions.
 
-	Two less obvious results. \textbf{Humidity} is the only variable that flips sign across pollutant groups: positive for particulates (up to 0.33 for PM$_{2.5}$), negative for O$_3$ ($-0.51$). At daily resolution, humidity apparently helps PM accumulate rather than washing it out. \textbf{Rain}, on the other hand, is nearly uncorrelated with everything (0.00 to $-0.16$). Precipitation by itself is a poor predictor of air quality.
+	 \textbf{Humidity} is the only variable that flips sign across pollutant groups: positive for particulates (up to 0.33 for PM$_{2.5}$), negative for O$_3$ ($-0.51$). At daily resolution, humidity apparently helps PM accumulate rather than washing it out. \textbf{Rain}, on the other hand, is nearly uncorrelated with everything (0.00 to $-0.16$). Precipitation by itself is a poor predictor of air quality.
 
+	\newpage
 	\subsubsection{Which combinations of weather conditions frequently co-occur with pollution levels?}
 
 	\textbf{Association Rule Mining} was used to find which weather combinations tend to appear together with specific pollution levels, picking up non-linear and multi-variable patterns that Pearson coefficients miss.\\
@@ -1001,7 +1002,7 @@ class Source(ABC):
 		\caption*{Top 20 rules ranked by lift (Weather $\rightarrow$ Pollutants).}
 	\end{table}
 
-	Three meteorological regimes emerge from the rules, each with its own pollution signature.
+	Three meteorological patterns emerge from the rules, each with its own pollution signature.
 
 	The first and most common is \textbf{atmospheric stagnation}: low wind, little rain, moderate temperature. It appears in most top-ranked rules and co-occurs with \texttt{PM10\_HIGH} and \texttt{O3\_MID}, hitting a lift of 7.37. The consistency across different antecedent combinations (lifts 6.05-7.37) makes stagnation the single best meteorological predictor of pollution peaks.
 
@@ -1047,7 +1048,7 @@ class Source(ABC):
 		\end{minipage}
 	\end{figure}
 	
-	Combustion vehicles still dominate. Benzina and Diesel together make up about 58\% of accesses, but \textbf{Ibrido Benzina Elettrico} already accounts for 19\%, pushing total low-emission share to roughly 23\%. 
+	Benzina and Diesel together make up about 58\% of accesses, but \textbf{Ibrido Benzina Elettrico} already accounts for 19\%, pushing total low-emission share to roughly 23\%. 
 	Alternative fuels are marginal ($<$3.5\%). Hydrogen: one single access all year. 
 	The \textbf{NC} category (13\%) is large enough to be a real problem for any emission estimate built on fleet composition. 
 	Month-to-month, the mix barely changes.
@@ -1071,9 +1072,11 @@ class Source(ABC):
 	\textbf{Euro 6} vehicles make up over 55\% of accesses, a direct consequence of progressive urban access bans pushing fleet renewal.
 	The \textbf{Euro 0} share (about 4\%) is actually higher than Euro 1 and Euro 2 combined, most likely motorcycles and historic vehicles benefiting from exemptions, not genuine non-compliance.
 
+	\newpage
 	\subsubsection{Can daily vehicle accesses be predicted?}
 	
-	A \textbf{Random Forest Regressor} was trained to predict daily accesses. Features: lagged traffic (1, 2, 3, and 7 days back), a 7-day rolling mean and standard deviation, day of week, month, a weekend flag, a holiday indicator (\texttt{is\_holiday}) covering Italian national holidays plus Saint Ambrose Day on 7 December, and a bridge-day indicator (\texttt{is\_bridge}) for workdays squeezed between a holiday and a weekend.
+	A \textbf{Random Forest Regressor} was trained to predict daily accesses. 
+	Features includes lagged traffic (1, 2, 3, and 7 days back), a 7-day rolling mean and standard deviation, day of week, month, a weekend flag, a holiday indicator, and a bridge-day indicator.
 	Hyperparameters were tuned by \textbf{Cross Validation} over an 11-fold \textbf{Time Series Split}, so every test fold comes strictly after its training data.
 	
 	\begin{figure}[H]
@@ -1101,11 +1104,12 @@ class Source(ABC):
 		\end{tabular}
 	\end{table}
 	
-	R$^2$ = 0.724. The autoregressive and calendar features capture about 72\% of daily variance. The missing 28\% is presumably weather, big public events, and transport strikes, none of which appear in the feature set.
+	The features capture about 72\% of daily variance. The missing 28\% is presumably releated to other feature not mapped like weather, big public events, and transport strikes.
+	The model over-predicts because its lag features carry forward normal working-day volumes and cannot anticipate the sudden drop. 
+	Holiday and bridge indicator were added to compensate but is not sufficent.
+	The mirror problem shows up on post-holiday return days where traffic rebounds sharply, producing the largest under-predictions. 
 
-	The residuals show a clear pattern around \textbf{holidays and bridge days}. The model over-predicts because its lag features carry forward normal working-day volumes and cannot anticipate the sudden drop. Binary \texttt{is\_holiday} and \texttt{is\_bridge} flags from the Italian holiday calendar (subdivision Milano) were added to compensate.
-	The mirror problem shows up on post-holiday return days in April and September: traffic rebounds sharply, producing the largest under-predictions. The bridge indicator partially handles these transitions too.
-
+	\newpage
 	\subsubsection{Which days show anomalous traffic volumes?}
 	
 	An \textbf{Isolation Forest} (200 estimators, 5\% contamination) was fitted on daily traffic totals.
@@ -1127,6 +1131,7 @@ class Source(ABC):
 	Every flagged day has an obvious calendar explanation. Area C traffic is, in short, very regular once you account for a handful of known events.
 
 	\newpage
+	
 	\subsection{Is there a measurable association between human activity intensity and air pollutant levels?}
 	
 	\subsubsection{Do high traffic days co-occur with elevated pollutant levels?}
@@ -1177,6 +1182,7 @@ class Source(ABC):
 
 	The overall maximum lift is \textbf{1.89}, low by association-rule standards. Two structural limitations apply. First, \textbf{geography}: traffic and pollution data are both restricted to Milan, so nothing here generalizes to the rest of Lombardy. Second, \textbf{instrument mismatch}: Area C monitors a single corridor into the city centre and captures only a fraction of total urban mobility, making it a weak proxy for actual emission intensity. In practice, traffic volume acts as a \textbf{calendar proxy}: it encodes time-of-year and holiday patterns, not emission load. A more informative analysis would need region-wide counts from motorways, provincial roads, and other cities.
 
+	\newpage
 	\subsubsection{Does high tourism pressure co-occur with higher pollution levels?}
 
 	Here the activity variable is the \textbf{monthly tourism pressure index}, compared against daily concentrations of NO$_2$, O$_3$, PM$_{10}$, and PM$_{2.5}$.
@@ -1224,13 +1230,13 @@ class Source(ABC):
 	Tourism intensity works as a \textbf{calendar proxy}. No rule connects high visitor numbers to pollution levels above what the season already produces. Municipality-scale air quality is driven by large-scale meteorology, not by visitor counts.
 
 	\newpage
+	
 	\section{Generative artificial intelligence tools used}
 
-	AI tools like GitHub Copilot, Google Gemini, and ChatGPT were used during the project for:
+	AI tools like GitHub Copilot and Google Gemini were used during the project for:
 	\begin{itemize}
-		\item support writing and debugging Python code, especially when working with unfamiliar libraries
-		\item dataset discovery via deep-search features during the research phase
-		\item drafting documentation, checking text, fixing grammar, and translating to English
+		\item support writing and debugging Python code
+		\item drafting documentation, checking text end fixing grammar
 	\end{itemize}
 
 	
