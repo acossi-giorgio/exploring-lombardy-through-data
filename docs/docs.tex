@@ -43,20 +43,21 @@
 	
 	This project analyzes air quality, weather, traffic, and tourism across Lombardy in 2023. The data comes from ARPA Lombardia, the Municipality of Milan, and ISTAT.
 
-	The year 2023 was chosen because the traffic dataset only covers that period. Restricting all sources to the same window keeps things consistent and cuts down on processing time.
+	The year 2023 was chosen because the traffic dataset only covers that period. Restricting all sources to the same window keeps things consistent.
 
 	Four data domains feed into the analysis:
 	\begin{itemize}
-		\item \textbf{Air and Weather:} hourly and daily sensor readings for pollutants and meteorological variables across Lombardy, with station and sensor registry metadata (ARPA Lombardia).
+		\item \textbf{Air and Weather:} hourly and daily sensor readings for pollutants and meteorological variables across Lombardy (ARPA Lombardia).
 		\item \textbf{Traffic:} individual vehicle transit records at Milan's Area C restricted zone (Municipality of Milan).
 		\item \textbf{Tourism:} monthly overnight stays per municipality (ISTAT).
 		\item \textbf{Territory:} population counts, municipal statistics, and geographic boundaries (ISTAT).
+		\item \textbf{Geospatial:} municipality boundaries in GeoJSON format (OpenStreetMap).
 	\end{itemize}
 
 	The work proceeds in two stages:
 	\begin{itemize}
-		\item A Data Warehouse is designed and filled through an ETL pipeline that extracts, cleans, and loads everything into a PostgreSQL database.
-		\item Then, \textbf{Advanced SQL}, \textbf{Association Rules}, and \textbf{Machine Learning} are applied to answer the business questions laid out in the next section.
+		\item A Data Warehouse is designed and filled through an ETL pipeline into a PostgreSQL database.
+		\item Then, \textbf{SQL Queries}, \textbf{Association Rules}, and \textbf{Machine Learning} are applied to answer the business questions laid out in the next section.
 	\end{itemize}
 	
 	\newpage
@@ -76,9 +77,9 @@
 		\item Which combinations of weather conditions frequently co-occur with pollution levels?
 	\end{itemize}
 
-	\textbf{How can vehicle access data be analyzed to understand fleet composition, temporal patterns, and traffic behavior?}
+	\textbf{How can vehicle access data be analyzed to model patterns, forecast trends, and detect anomalies in support of mobility planning?}
 	\begin{itemize}
-		\item What is the composition of the fleet of vehicles accesses and how is it distributed through the year?
+		\item What is the composition of the fleet of vehicles accesses and how is it distributed?
 		\item Can daily vehicle accesses be predicted?
 		\item Which days show anomalous traffic volumes?
 	\end{itemize}
@@ -207,7 +208,7 @@
 	
 	\href{https://www.dati.Lombardia.it/Ambiente/Stazioni-Idro-Nivo-Meteorologiche/nf78-nj6b/about_data}{Datasets Source}
 	
-	Registry of hydro-nivo-meteorological stations and their sensors. One row per sensor; station information is denormalized.
+	Registry of hydro-nivo-meteorological stations and their sensors. One row per sensor, station information is denormalized.
 	
 	\textbf{Schema}
 		
@@ -398,7 +399,7 @@
 	\subsection{Municipalities Shape}
 	\href{https://www.openstreetmap.org}{Datasets Source}
 	
-	Municipality boundaries in GeoJSON format.
+	Municipality boundaries in GeoJSON format, provided by OpenStreetMap.
 	
 	\newpage
 	\section{Data Warehouse Structure}
@@ -408,18 +409,36 @@
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=0.9\textwidth]{./images/WeatherAirSampleDFM.png}
+		\caption{Weather and Air Quality Sample DFM}
 	\end{figure}
 	
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=0.6\textwidth]{./images/GateAccessDFM.png}
+		\caption{Gate Access DFM}
 	\end{figure}
 	
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=0.5\textwidth]{./images/OvernightsDFM.png}
+		\caption{Overnights DFM}
+	\end{figure}
+
+	\textit{Schemas designed with \href{https://www.iconsulting.biz/indyco/}{Indyco}.}
+	
+	\newpage
+	\subsection{Snowflake Schema}
+	
+	The three DFM models were merged into a single \textbf{snowflake schema} instead of three separate star schemas.
+	Shared concepts: coordinates (\texttt{location\_dt}), municipality metadata (\texttt{municipality\_dt}), and date (\texttt{date\_dt}) live in dedicated tables that multiple fact tables and dimensions reference.
+	This cuts redundancy across \texttt{station\_dt}, \texttt{gate\_dt}, and \texttt{municipality\_dt}, keeps natural hierarchies intact (sensor $\rightarrow$ station $\rightarrow$ municipality $\rightarrow$ location), and makes cross-fact joins possible, for instance linking \texttt{sample\_ft} and \texttt{overnights\_ft} through \texttt{municipality\_dt} without duplicating data.
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\textwidth]{./images/schema.png}
 	\end{figure}
 	
+	\newpage
 	\subsection{Fact Tables}
 	
 	\subsubsection{Weather and Air Quality Sample Fact (\textbf{\texttt{sample\_ft}})}
@@ -634,7 +653,7 @@
 	
 	\subsubsection{Population Dimension (\textbf{\texttt{population\_dt}})}
 	
-	Annual resident population per municipality. Links a municipality to a reference year via \texttt{date\_dt}, so that population-normalized indicators (e.g.\ per-capita pollution, tourism pressure ratios) can be computed.
+	Annual resident population per municipality. Links a municipality to a reference year via \texttt{date\_dt}.
 	\begin{table}[H]
 		\centering
 		\begin{tabular}{lll}
@@ -649,19 +668,7 @@
 		\end{tabular}
 	\end{table}
 	
-	
-	\newpage
-	\subsection{Snowflake Schema}
-	
-	The three DFM models were merged into a single \textbf{snowflake schema} instead of three separate star schemas.
-	Shared concepts: coordinates (\texttt{location\_dt}), municipality metadata (\texttt{municipality\_dt}), and date (\texttt{date\_dt}) live in dedicated tables that multiple fact tables and dimensions reference.
-	This cuts redundancy across \texttt{station\_dt}, \texttt{gate\_dt}, and \texttt{municipality\_dt}, keeps natural hierarchies intact (sensor $\rightarrow$ station $\rightarrow$ municipality $\rightarrow$ location), and makes cross-fact joins possible, for instance linking \texttt{sample\_ft} and \texttt{overnights\_ft} through \texttt{municipality\_dt} without duplicating data.
-	
-	\begin{figure}[H]
-		\centering
-		\includegraphics[width=0.8\textwidth]{./images/schema.png}
-	\end{figure}
-	
+
 	\newpage
 	\section{ETL Flow}
 
@@ -717,7 +724,7 @@ class Source(ABC):
 
 	\subsection{Extraction Phase}
 
-	Raw CSVs are loaded through typed \texttt{Source} subclasses. The resulting DataFrame goes straight to the transformation step nothing is persisted in between.
+	Raw CSVs are loaded through typed \texttt{Source} subclasses. The resulting DataFrame goes straight to the transformation step.
 
 	\subsection{Transformation Phase}
 
@@ -727,7 +734,7 @@ class Source(ABC):
 		\item \textbf{Filtering and validation:} dropping invalid or out-of-scope records measurements with the missing-value sentinel, inactive sensors, entries outside 2023.
 		\item \textbf{Schema harmonization:} renaming and selecting columns so that heterogeneous sources share one schema before any join or concatenation.
 		\item \textbf{Code decoding:} replacing numeric or abbreviated codes with readable labels through lookup tables (e.g.\ urbanization levels, altimetric zones, Area C vehicle fields). Not every table needed this.
-		\item \textbf{Temporal aggregation:} rolling data up to the target granularity. Sensor samples, for instance, are aggregated to daily level with mean, min, max, and standard deviation. Again, not every table needed it.
+		\item \textbf{Temporal aggregation:} rolling data up to the target granularity. Sensor samples, for instance, are aggregated to daily level with mean, min, max, and standard deviation. Not every table needed it.
 		\item \textbf{Foreign-key resolution:} matching each record to its dimension surrogate key. Where a plain join is not enough, the \texttt{get\_id} method of the relevant \texttt{Table} handles the lookup, keeping resolution logic out of the pipeline code.
 		\item \textbf{Referential integrity enforcement:} any row whose foreign key cannot be resolved is dropped, so no orphan records reach the database.
 	\end{itemize}
@@ -741,7 +748,7 @@ class Source(ABC):
 	\newpage
 	\section{Analysis}
 	
-	Each analysis targets one of the business questions from Section 2, using a mix of Advanced SQL, Association Rule Mining, and Machine Learning.
+	Each analysis targets one of the business questions from Section 2, using a mix of Advanced SQL, Association Rule Mining, and Machine Learning Algorithms.
 
 	\subsection{How can air quality data across municipalities be analyzed to support environmental and public health decision-making?}
 	
@@ -766,26 +773,21 @@ class Source(ABC):
 		
 	ISTAT classifies municipalities into three urbanization levels: \textbf{Dense}, \textbf{Intermediate}, and \textbf{Rural}. 
 	Statistics were computed per pollutant and urbanization level and compared to the Lombardy-wide aggregate.
-	The charts show the top 10 longest consecutive exceedance episodes per pollutant; darker red means longer duration.
 	
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=\textwidth]{./images/1_air_quality/hierarchical_stats_combined.png}
 	\end{figure}
 
-	
-
-	\textbf{PM$_{10}$} and \textbf{PM$_{2.5}$} show almost no gradient across urbanization levels. Concentrations even peak in \textbf{Intermediate} areas. Particulate matter is a \textbf{regional problem}, not an urban one.
-
-	\textbf{PM$_{2.5}$} stands apart. It is the only pollutant whose annual mean exceeds the limit in \emph{all} three urbanization categories, uniformly. That alone sets it apart from the rest and argues for region-wide structural measures rather than city-level fixes.
-
-	 Pollutants patterns vary across urbanization levels. Dense areas are characterized by higher \textbf{NO$_2$} concentrations, rural areas by elevated \textbf{O$_3$} livels linked to reduced NO titration, 
-	 while intermediate zones show the highest \textbf{PM$_{10}$} and \textbf{PM$_{2.5}$} concentrations.
+	Particulate matter (\textbf{PM${10}$} and \textbf{PM${2.5}$}) is a \textbf{regional rather than urban problem}, lacking a clear urbanization gradient and even peaking in \textbf{Intermediate} areas. 
+	\textbf{PM$_{2.5}$} is uniquely critical as it uniformly exceeds annual limits everywhere, demanding region-wide structural measures instead of local fixes.
+	Pollutants patterns vary across urbanization levels. Dense areas are characterized by higher \textbf{NO$_2$} concentrations, rural areas by elevated \textbf{O$_3$} livels linked to reduced NO titration, 
+	while intermediate zones show the highest \textbf{PM$_{10}$} and \textbf{PM$_{2.5}$} concentrations.
 
 	\subsubsection{Are there municipalities that repeatedly experience multi-day episodes of pollution above health-based thresholds?}
 	
 	To find municipalities with recurring sustained exceedances, \textbf{critical pollution windows} were defined: consecutive days on which a municipality's daily average stays above the threshold for a given pollutant.
-	
+	The charts show the top 10 longest consecutive exceedance episodes per pollutant; darker red means longer duration.
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=\textwidth]{./images/1_air_quality/critical_episodes_combined.png}
@@ -793,7 +795,7 @@ class Source(ABC):
 	
 	 Exceedances cluster in predictable calendar windows.
 
-	Two cases break the pattern. \textbf{Cinisello Balsamo} registers an NO$_2$ episode in mid-summer, when traffic is typically low. That is unusual and suggests a local non-traffic source. \textbf{Moggio} shows O$_3$ exceedances from May all the way to October far longer than anywhere else. Its altitude, exposure, and low local NO emissions probably explain why ozone persists there well outside the normal summer window.
+	Two cases break the pattern. \textbf{Cinisello Balsamo} registers an NO$_2$ episode in mid-summer, when traffic is typically low. That is unusual and suggests a local non-traffic source. \textbf{Moggio} shows O$_3$ exceedances from May all the way to October far longer than anywhere else. 
 
 	Episode duration matters as much as frequency. A week-long exceedance is a different health risk from a one-day spike, and any risk assessment should weight it accordingly.
 			
@@ -832,11 +834,11 @@ class Source(ABC):
 		\caption{Weekly pollutants trend.}
 	\end{figure}
 	
-	The seasonal shape is similar everywhere: primary pollutants (NO$_2$, PM$_{10}$, PM$_{2.5}$) peak in winter and drop through spring and summer; O$_3$ does the opposite, peaking in summer.
+	The seasonal shape is similar everywhere, primary pollutants (NO$_2$, PM$_{10}$, PM$_{2.5}$) peak in winter and drop through spring and summer; O$_3$ does the opposite, peaking in summer.
 
-	\textbf{Cluster 2} is the dirtiest group. Its primary-pollutant concentrations are the highest year-round, and in winter both PM$_{2.5}$ and NO$_2$ regularly breach guideline levels.
-
-	\textbf{Cluster 0} sits near the regional average. \textbf{Cluster 1}, the lone municipality, has readings extreme enough to form its own cluster, confirming it is a statistical outlier.
+	\textbf{Cluster 2} is the more polluted group. Its primary-pollutant concentrations are the highest year-round, and in winter both PM$_{2.5}$ and NO$_2$ regularly breach guideline levels.
+	\textbf{Cluster 0} sits near the regional average. 
+	\textbf{Cluster 1}, the lone municipality, has readings extreme enough to form its own cluster, confirming it is a statistical outlier.
 	
 	\textbf{Cluster Pollution Index} \\
 	\begin{table}[H]
@@ -853,7 +855,7 @@ class Source(ABC):
 		\caption*{Cluster Pollution Index.}
 	\end{table}
 
-	 \textbf{Cluster 2} has the highest index (0.887), but that is driven by one municipality. \textbf{Cluster 0} comes next at 0.779, the dirtiest multi-municipality group. \textbf{Cluster 1} is well below at 0.471.
+	 \textbf{Cluster 2} has the highest index (0.887). \textbf{Cluster 0} comes next at 0.779. \textbf{Cluster 1} is well below at 0.471.
 	
 	\newpage
 	\subsubsection{Which municipalities are most polluted with particulate matter?}
@@ -940,7 +942,7 @@ class Source(ABC):
 		\caption*{PM$_{10}$ top-5 appearances by urbanization level.}
 	\end{table}
 
-	 Dense municipalities are \textbf{under-represented} relative to their share of the monitoring network; Intermediate and Rural areas are \textbf{over-represented} for both pollutants.
+	 Dense municipalities are \textbf{under-represented} relative to their share of the monitoring network, Intermediate and Rural areas are \textbf{over-represented} for both pollutants.
 
 	The gap is widest for PM$_{10}$: Intermediate municipalities make up 68.3\% of appearances versus a 56\% baseline, while Dense areas drop to 13.3\% against 23\%. One plausible reading is that urban traffic restrictions and centralized heating regulations are doing their job in large cities, but peripheral industrial and agricultural zones remain outside current policy reach.
 
@@ -1002,19 +1004,18 @@ class Source(ABC):
 		\caption*{Top 20 rules ranked by lift (Weather $\rightarrow$ Pollutants).}
 	\end{table}
 
-	Three meteorological patterns emerge from the rules, each with its own pollution signature.
+	Two meteorological patterns emerge from the rules, each with its own pollution signature.
 
-	The first and most common is \textbf{atmospheric stagnation}: low wind, little rain, moderate temperature. It appears in most top-ranked rules and co-occurs with \texttt{PM10\_HIGH} and \texttt{O3\_MID}, hitting a lift of 7.37. The consistency across different antecedent combinations (lifts 6.05-7.37) makes stagnation the single best meteorological predictor of pollution peaks.
+	The first and most common is \textbf{atmospheric stagnation}: low wind, little rain, moderate temperature. The top-ranked rule \texttt{RADIATION\_MID + RAIN\_LOW + TEMP\_MID + WIND\_LOW $\rightarrow$ O3\_MID + PM10\_HIGH} reaches a lift of 7.37, and the same \texttt{WIND\_LOW + RAIN\_LOW} core reappears across most top rules with lifts in the 6.05--7.37 range, making stagnation the single best meteorological predictor of pollution peaks.
 
-	The second is a \textbf{decoupling regime} where high radiation coincides with rain and wind. Under these conditions NO$_2$ and PM$_{10}$ drop to low levels (wet scavenging clears them out), but O$_3$ stays high (confidence up to 46.7\%) because photochemistry keeps running as long as there is enough sunlight.
+	The second is a \textbf{decoupling pattern} where high radiation coincides with rain and wind. Rule \texttt{HUMIDITY\_MID + RADIATION\_HIGH + RAIN\_HIGH + WIND\_HIGH $\rightarrow$ NO2\_LOW + O3\_HIGH + PM10\_LOW} (confidence 46.7\%, lift 6.25) captures it best: NO$_2$ and PM$_{10}$ drop to low levels (wet scavenging clears them out), but O$_3$ stays high because photochemistry keeps running as long as there is enough sunlight.
 
-	The third regime combines \texttt{HUMIDITY\_MID}, \texttt{RADIATION\_MID}, and \texttt{WIND\_LOW}. Here, NO$_2$, O$_3$, and PM$_{10}$ all accumulate at the same time (lift 6.43-6.81). This multi-pollutant build-up is typical of transitional seasons and is the hardest scenario to address with single-pollutant regulations.
 	
 	\newpage
 	
-	\subsection{How can vehicle access data be analyzed to understand fleet composition, temporal patterns, and traffic behavior?}
+	\subsection{How can vehicle access data be analyzed to model patterns, forecast trends, and detect anomalies in support of mobility planning?}
 	
-	\subsubsection{What is the composition of the fleet of vehicles accesses and how is it distributed through the year?}
+	\subsubsection{What is the composition of the fleet of vehicles accesses and how is it distributed?}
 
  	Several queries were run to extract the access trend and fleet breakdown by fuel type and Euro standard. The results were plotted to spot dominant categories and seasonal patterns.
 	
@@ -1138,7 +1139,7 @@ class Source(ABC):
 
 	The activity variable here is \textbf{Area C daily traffic volume}, paired with daily concentrations of NO$_2$, O$_3$, PM$_{10}$, and PM$_{2.5}$.
 	Because the traffic data covers only one zone, \textbf{this analysis is limited to the municipality of Milan}.
-	Both traffic and pollutant values were binned into three levels (LOW, MID, HIGH) using global tertiles over the Milan daily series.
+	Both traffic and pollutant values were binned into three levels (LOW, MID, HIGH) using tertiles over the Milan daily series.
 	Apriori was run with minimum support 0.5\% and minimum confidence 20\%. 
 	Only rules with a traffic-only antecedent, pollutant-only consequent, and lift $\geq$ 1.0 were kept.
 
@@ -1174,13 +1175,21 @@ class Source(ABC):
 		\caption*{Top 20 rules ranked by lift (Traffic $\rightarrow$ Pollutants).}
 	\end{table}
 
-	The \texttt{TRAFFIC\_LOW} rules dominate (lift up to \textbf{1.89}), but they are picking up \textbf{seasonal confounding}. Low traffic and \texttt{NO2\_LOW + O3\_HIGH} co-occur because August Ferragosto kills commuter traffic at exactly the time when summer meteorology pushes ozone up. That is a calendar effect, not a causal link.
-	
-	The \texttt{TRAFFIC\_MID} rules (lift \textbf{1.42-1.45}) pair intermediate volumes with \texttt{NO2\_HIGH + O3\_LOW + PM25\_HIGH}. This matches autumn and winter workdays: \textbf{atmospheric stagnation} traps pollutants near the surface regardless of how many cars enter Area C.
-	
-	The \texttt{TRAFFIC\_HIGH} bin yields just one rule (\texttt{NO2\_MID + PM25\_MID}, lift \textbf{1.71}). Peak traffic volumes do not produce any distinctive pollution signature beyond what the season already explains.
+	Three traffic patterns emerge from the rules, but none reflects a direct causal link with emissions.
 
-	The overall maximum lift is \textbf{1.89}, low by association-rule standards. Two structural limitations apply. First, \textbf{geography}: traffic and pollution data are both restricted to Milan, so nothing here generalizes to the rest of Lombardy. Second, \textbf{instrument mismatch}: Area C monitors a single corridor into the city centre and captures only a fraction of total urban mobility, making it a weak proxy for actual emission intensity. In practice, traffic volume acts as a \textbf{calendar proxy}: it encodes time-of-year and holiday patterns, not emission load. A more informative analysis would need region-wide counts from motorways, provincial roads, and other cities.
+	The \texttt{TRAFFIC\_LOW} rules dominate the top of the table. The strongest, \texttt{TRAFFIC\_LOW $\rightarrow$ NO2\_LOW + O3\_HIGH + PM10\_LOW} (lift 1.89), and the rest of the \texttt{TRAFFIC\_LOW} group (lifts 1.54--1.83) all point to the same \texttt{NO2\_LOW + O3\_HIGH} signature. 
+	This is \textbf{seasonal confounding}, low traffic and high ozone co-occur because August kills commuter traffic exactly when summer meteorology pushes O$_3$ up. A calendar effect, not a causal link.
+
+	The \texttt{TRAFFIC\_MID} pattern captures the opposite season. 
+	Rule \texttt{TRAFFIC\_MID $\rightarrow$ NO2\_HIGH + O3\_LOW + PM25\_HIGH} (lift 1.45) anchors a tight group (lifts 1.42--1.45) where intermediate volumes pair with elevated NO$_2$ and PM$_{2.5}$. 
+	This matches autumn and winter workdays, when \textbf{atmospheric stagnation}.
+
+	The \texttt{TRAFFIC\_HIGH} pattern yields a single rule, \texttt{TRAFFIC\_HIGH $\rightarrow$ NO2\_MID + PM25\_MID} (lift 1.71): peak volumes produce no distinctive pollution signature beyond what the season already explains.
+
+	The overall maximum lift of 1.89 is low by association-rule standards. Two structural limitations apply. 
+	First, \textbf{geography}, traffic and pollution data are both restricted to Milan, so nothing here generalizes to the rest of Lombardy. 
+	Second, \textbf{instrument mismatch}, Area C monitors a single corridor into the city centre and captures only a fraction of total urban mobility, making it a weak proxy for actual emission intensity. 
+	A more informative analysis would need region-wide counts from motorways, provincial roads, and other cities.
 
 	\newpage
 	\subsubsection{Does high tourism pressure co-occur with higher pollution levels?}
@@ -1221,22 +1230,23 @@ class Source(ABC):
 		\caption*{Top 20 rules ranked by lift (Tourism $\rightarrow$ Pollutants).}
 	\end{table}
 
-	The \texttt{TOURISM\_LOW} rules take up 14 of the top 20 slots (lift up to \textbf{2.65}). \textbf{Winter stagnation} is doing the work here: low-tourism months line up with the classic Po Valley pollution fingerprint: \texttt{NO2\_HIGH}, \texttt{PM10\_HIGH}, \texttt{PM25\_HIGH}, \texttt{O3\_LOW}. The single strongest association links \texttt{TOURISM\_LOW} to \texttt{NO2\_HIGH} at \textbf{66.7\%} confidence. That is \textbf{thermal inversion} in winter, not some effect of fewer tourists.
-	
-	The \texttt{TOURISM\_HIGH} rules (6 rules, lift up to \textbf{1.72}) tie peak visitor months to \texttt{NO2\_LOW} and \texttt{O3\_HIGH}, exactly what you would expect from high radiation and better ventilation in summer. Nothing here points to tourism itself improving air quality.
+	Two tourism patterns emerge from the rules, but both reduce to seasonal weather rather than visitor activity.
 
-	The higher lift for tourism (\textbf{2.65}) compared to traffic does not mean tourism has a stronger physical effect. At monthly granularity, daily noise disappears, leaving little more than the seasonal weather pattern to correlate with.
-	
-	Tourism intensity works as a \textbf{calendar proxy}. No rule connects high visitor numbers to pollution levels above what the season already produces. Municipality-scale air quality is driven by large-scale meteorology, not by visitor counts.
+	The \texttt{TOURISM\_LOW} rules fill 14 of the top 20 slots. The strongest, \texttt{TOURISM\_LOW $\rightarrow$ O3\_LOW + PM10\_HIGH + PM25\_HIGH} (lift 2.65), anchors a tight group (lifts 2.00--2.65) that maps onto the classic winter fingerprint: \texttt{NO2\_HIGH}, \texttt{PM10\_HIGH}, \texttt{PM25\_HIGH}, \texttt{O3\_LOW}. The single highest-confidence rule, \texttt{TOURISM\_LOW $\rightarrow$ NO2\_HIGH} (66.7\%), confirms the picture. This is \textbf{thermal inversion} in winter, not an effect of fewer tourists.
 
+	The \texttt{TOURISM\_HIGH} pattern captures the opposite season. Rule \texttt{TOURISM\_HIGH $\rightarrow$ NO2\_LOW + O3\_HIGH} (lift 1.72) anchors a smaller group (6 rules, lifts 1.48--1.72) pairing peak visitor months with the photochemical signature of summer: low NO$_2$ and high O$_3$, exactly what high radiation and better ventilation produce. Nothing here points to tourism itself improving air quality.
+
+	Two structural limitations weaken these patterns. First, \textbf{temporal granularity}, tourism is reported monthly, so every day within a month inherits the same \texttt{TOURISM\_LOW}/\texttt{MID}/\texttt{HIGH} label. Daily variability in the antecedent is gone, and the rules effectively reduce to a comparison between calendar months. The high lifts (up to 2.65) reflect the strong seasonal contrast in pollution, not a sharp dependence on visitor numbers. Second, the monthly index conflates \textbf{season and tourism intensity}: low-tourism months are also winter months, so the antecedent cannot be cleanly separated from the meteorology it correlates with.
+
+	Tourism intensity therefore acts as a \textbf{calendar proxy}. No rule connects high visitor numbers to pollution levels above what the season already produces, and municipality-scale air quality is driven by large-scale meteorology, not visitor counts. A finer-grained tourism signal (daily arrivals, overnight stays) would be needed to test whether visitor pressure has any residual effect once seasonality is controlled for.
 	\newpage
 	
 	\section{Generative artificial intelligence tools used}
 
 	AI tools like GitHub Copilot and Google Gemini were used during the project for:
 	\begin{itemize}
-		\item support writing and debugging Python code
-		\item drafting documentation, checking text end fixing grammar
+		\item support writing and debugging python code
+		\item support writing documentation, checking text and fixing grammar
 	\end{itemize}
 
 	
