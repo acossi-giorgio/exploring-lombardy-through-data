@@ -1,0 +1,13 @@
+pollutant,urbanization,mean_val,min_val,max_val,median_val,std_val
+Biossido di Azoto,Città/Zone densamente popolate,29.49,0.87,133.15,27.38,14.84
+Biossido di Azoto,Piccole città/sobborghi o Zone a densità intermedia di popolazione,21.12,0.91,111.8,18.74,11.64
+Biossido di Azoto,Zone rurali/sparse,15.68,0.04,57.46,13.81,8.7
+Ozono,Città/Zone densamente popolate,52.64,0.0,164.79,51.57,32.48
+Ozono,Piccole città/sobborghi o Zone a densità intermedia di popolazione,53.41,0.02,172.39,54.23,30.81
+Ozono,Zone rurali/sparse,55.33,0.68,181.27,57.01,29.8
+Particelle sospese PM2.5,Città/Zone densamente popolate,17.95,0.0,88.0,14.0,12.35
+Particelle sospese PM2.5,Piccole città/sobborghi o Zone a densità intermedia di popolazione,18.42,0.0,92.0,15.0,12.69
+Particelle sospese PM2.5,Zone rurali/sparse,17.2,0.0,82.0,14.0,12.41
+PM10 (SM2005),Città/Zone densamente popolate,25.88,0.0,113.6,22.0,15.44
+PM10 (SM2005),Piccole città/sobborghi o Zone a densità intermedia di popolazione,26.06,0.0,137.0,22.0,16.06
+PM10 (SM2005),Zone rurali/sparse,24.22,0.0,110.0,21.0,15.4
