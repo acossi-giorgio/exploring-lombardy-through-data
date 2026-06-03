@@ -969,7 +969,7 @@ class Source(ABC):
 
 	\textbf{Association Rule Mining} was used to find which weather combinations tend to appear together with specific pollution levels, picking up non-linear and multi-variable patterns that Pearson coefficients miss.\\
 	Both weather and pollutant variables were discretized into three ordinal bins (LOW, MID, HIGH) using \textbf{per-municipality tertiles}, so thresholds reflect local conditions.\\
-	Apriori was run on the resulting binary matrix with minimum support 0.5\% and minimum confidence 20\%; only rules with lift $\geq$ 1.20 and a weather-only antecedent mapping to a pollutant-only consequent were kept.
+	Apriori was run on the resulting binary matrix with minimum support 0.5\% and minimum confidence 20\%; only rules with lift $\geq$ 1.00 and a weather-only antecedent mapping to a pollutant-only consequent were kept.
 
 	\begin{table}[H]
 		\centering
@@ -1112,7 +1112,7 @@ class Source(ABC):
 	\newpage
 	\subsubsection{Which days show anomalous traffic volumes?}
 	
-	An \textbf{Isolation Forest} (200 estimators, 5\% contamination) was fitted on daily traffic totals.
+	An \textbf{Isolation Forest} (200 estimators) was fitted on daily traffic totals.
 
 	\begin{figure}[H]
 		\centering
@@ -1121,13 +1121,14 @@ class Source(ABC):
 	\end{figure}
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.4\textwidth]{./images/3_traffic/anomaly_by_month.png}
+		\includegraphics[width=0.4\textwidth]{./images/3_traffic/anomaly_by_month.png}s
 		\caption{Monthly distribution of detected anomalies.}
 	\end{figure}
 	
-	\textbf{18 days} were flagged, splitting neatly into two groups. 
-	The \textbf{low-traffic anomalies} cluster around Ferragosto: Italy's main summer shutdown pushes volumes well below baseline.
-	The \textbf{high-traffic anomalies} land on predictable calendar transitions: the days around Easter, the end-of-summer rebound, and Fridays before long weekends. 
+	\textbf{96 days} were flagged, splitting neatly into three groups.
+	The \textbf{extreme low-traffic anomalies} form the most visible cluster: the Ferragosto period in August, where daily volumes collapse.
+	The \textbf{high-traffic anomalies} correspond to predictable demand peaks: the days around Easter in April, the end-of-summer rebound in September--October, and isolated Fridays before long weekends, where volumes spikess.
+	The \textbf{low-traffic outliers} are scattered public holidays throughout the year, most visibly in January and December, where daily volumes goo down without reaching the extreme lows of August.
 	Every flagged day has an obvious calendar explanation. Area C traffic is, in short, very regular once you account for a handful of known events.
 
 	\newpage
@@ -1177,8 +1178,8 @@ class Source(ABC):
 	Three traffic patterns emerge from the rules, but none reflects a direct causal link with emissions.
 
 	The \texttt{TRAFFIC\_LOW} rules dominate the top of the table. The strongest, \texttt{TRAFFIC\_LOW $\rightarrow$ NO2\_LOW + O3\_HIGH + PM10\_LOW} (lift 1.89), and the rest of the \texttt{TRAFFIC\_LOW} group (lifts 1.54--1.83) all point to the same \texttt{NO2\_LOW + O3\_HIGH} signature. 
-	This is \textbf{seasonal confounding}, low traffic and high ozone co-occur because August kills commuter traffic exactly when summer meteorology pushes O$_3$ up. This is a calendar effect, not a causal link.
-
+	This can be \textbf{seasonal confounding}, low traffic and high ozone co-occur because mainly because August kills commuter traffic exactly when summer meteorology pushes O$_3$ up.
+	
 	The \texttt{TRAFFIC\_MID} pattern captures the opposite season. 
 	Rule \texttt{TRAFFIC\_MID $\rightarrow$ NO2\_HIGH + O3\_LOW + PM25\_HIGH} (lift 1.45) anchors a tight group (lifts 1.42--1.45) where intermediate volumes pair with elevated NO$_2$ and PM$_{2.5}$. 
 	This matches autumn and winter workdays, when \textbf{atmospheric stagnation} traps pollutants.
@@ -1186,9 +1187,12 @@ class Source(ABC):
 	The \texttt{TRAFFIC\_HIGH} pattern yields a single rule, \texttt{TRAFFIC\_HIGH $\rightarrow$ NO2\_MID + PM25\_MID} (lift 1.71): peak volumes produce no distinctive pollution signature beyond what the season already explains.
 
 	The overall maximum lift of 1.89 is low by association-rule standards. Two structural limitations apply. 
+
 	First, \textbf{geography}: traffic and pollution data are both restricted to Milan, so nothing here generalizes to the rest of Lombardia. 
+
 	Second, \textbf{instrument mismatch}: Area C monitors a single corridor into the city centre and captures only a fraction of total urban mobility, making it a weak proxy for actual emission intensity. 
-	A more informative analysis would need region-wide counts from motorways, provincial roads, and other cities.
+
+	A more effective analysis would need region-wide counts from motorways, provincial roads, and other cities.
 
 	\newpage
 	\subsubsection{Does high tourism pressure co-occur with higher pollution levels?}
@@ -1236,9 +1240,11 @@ class Source(ABC):
 	The \texttt{TOURISM\_HIGH} pattern captures the opposite season. Rule \texttt{TOURISM\_HIGH $\rightarrow$ NO2\_LOW + O3\_HIGH} (lift 1.72) anchors a smaller group (6 rules, lifts 1.48--1.72) pairing peak visitor months with the photochemical signature of summer: low NO$_2$ and high O$_3$, exactly what high radiation and better ventilation produce. No rules link high tourism to pollution levels above what the season already generates.
 
 	Two structural limitations weaken these patterns. 
+	
 	First, \textbf{temporal granularity}: tourism is reported monthly, so every day within a month inherits the same \texttt{TOURISM\_LOW}/\texttt{MID}/\texttt{HIGH} label. 
 	Daily variability in the antecedent is gone, and the rules effectively reduce to a comparison between calendar months. 
 	The high lifts (up to 2.65) reflect the strong seasonal contrast in pollution, not a sharp dependence on visitor numbers. 
+	
 	Second, the monthly index conflates \textbf{season and tourism intensity}: low-tourism months are also winter months, so the antecedent cannot be cleanly separated from the meteorology it correlates with.
 
 	Tourism intensity therefore acts as a \textbf{calendar proxy}. 
