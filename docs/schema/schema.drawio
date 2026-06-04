@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram name="Pagina-1" id="qT5cfgZag6xrK_HG3W5d">
-        <mxGraphModel dx="1726" dy="1139" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+        <mxGraphModel dx="708" dy="419" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -123,7 +123,7 @@
                 <mxCell id="1aNwGcp8oZSLiVQ-54qW-10" value="&lt;u&gt;Municipality ID&lt;/u&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;" parent="1aNwGcp8oZSLiVQ-54qW-9" vertex="1">
                     <mxGeometry y="29" width="140" height="25" as="geometry"/>
                 </mxCell>
-                <mxCell id="1aNwGcp8oZSLiVQ-54qW-11" value="&lt;u&gt;Name&lt;/u&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;" parent="1aNwGcp8oZSLiVQ-54qW-9" vertex="1">
+                <mxCell id="1aNwGcp8oZSLiVQ-54qW-11" value="&lt;span&gt;Name&lt;/span&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;fontStyle=0" parent="1aNwGcp8oZSLiVQ-54qW-9" vertex="1">
                     <mxGeometry y="54" width="140" height="25" as="geometry"/>
                 </mxCell>
                 <mxCell id="1aNwGcp8oZSLiVQ-54qW-12" value="Type" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;" parent="1aNwGcp8oZSLiVQ-54qW-9" vertex="1">
