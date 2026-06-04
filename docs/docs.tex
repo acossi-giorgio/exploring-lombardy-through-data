@@ -809,17 +809,14 @@ class Source(ABC):
 
 	\begin{figure}[H]
 		\centering
-		\begin{minipage}{0.49\textwidth}
-			\centering
-			\includegraphics[width=\textwidth]{./images/1_air_quality/cluster_pca.png}
-			\caption{2D PCA projection}
-		\end{minipage}
-		\hfill
-		\begin{minipage}{0.49\textwidth}
-			\centering
-			\includegraphics[width=\textwidth]{./images/1_air_quality/cluster_geo_map.png}
-			\caption{Cluster location map}
-		\end{minipage}
+		\includegraphics[width=0.8\textwidth]{./images/1_air_quality/cluster_pca.png}
+		\caption{2D PCA projection}
+	\end{figure}
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\textwidth]{./images/1_air_quality/cluster_geo_map.png}
+		\caption{Cluster location map}
 	\end{figure}
 
 	\textbf{Cluster 0} contains most of the monitored municipalities. \textbf{Cluster 2} picks up a smaller, more polluted subset. \textbf{Cluster 1} consists of a \textbf{single municipality}: its profile is so different from everything else that it ends up alone. It is best read as an outlier, not a representative group.
@@ -957,7 +954,7 @@ class Source(ABC):
 	
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.5\textwidth]{./images/2_weather_pollution/correlation_heatmap.png}
+		\includegraphics[width=0.7\textwidth]{./images/2_weather_pollution/correlation_heatmap.png}
 	\end{figure}
 	
 	 \textbf{O$_3$} correlates strongly with radiation and temperature (0.76 and 0.75), no surprise given its photochemical origin. The primary pollutants (NO$_2$, PM$_{10}$, PM$_{2.5}$) go the other way, showing negative correlations with the same variables: they accumulate under cold, stagnant, low-radiation conditions.
@@ -1021,11 +1018,11 @@ class Source(ABC):
 	\textbf{Access trend} \\
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.9\textwidth]{./images/3_traffic/total_accesses_monthly.png}
+		\includegraphics[width=0.7\textwidth]{./images/3_traffic/total_accesses_monthly.png}
 	\end{figure}
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.9\textwidth]{./images/3_traffic/total_accesses_daily.png}
+		\includegraphics[width=0.7\textwidth]{./images/3_traffic/total_accesses_daily.png}
 	\end{figure}
 	
 	Accesses peak in \textbf{October} and bottom out in \textbf{August}. 
@@ -1035,17 +1032,14 @@ class Source(ABC):
 	\textbf{Fleet composition by fuel type} \\
 	\begin{figure}[H]
 		\centering
-		\begin{minipage}{0.49\textwidth}
-			\centering
-			\includegraphics[width=\textwidth]{./images/3_traffic/fleet_composition_by_fuel_monthly.png}
-			\caption{Monthly fleet composition by fuel type.}
-		\end{minipage}
-		\hfill
-		\begin{minipage}{0.49\textwidth}
-			\centering
-			\includegraphics[width=\textwidth]{./images/3_traffic/total_accesses_by_fuel.png}
-			\caption{Total accesses by fuel type.}
-		\end{minipage}
+		\includegraphics[width=0.7\textwidth]{./images/3_traffic/fleet_composition_by_fuel_monthly.png}
+		\caption{Monthly fleet composition by fuel type.}
+	\end{figure}
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.7\textwidth]{./images/3_traffic/total_accesses_by_fuel.png}
+		\caption{Total accesses by fuel type.}
 	\end{figure}
 	
 	Benzina and Diesel together make up about 58\% of accesses, but \textbf{Ibrido Benzina Elettrico} already accounts for 19\%, pushing total low-emission share to roughly 23\%. 
@@ -1053,20 +1047,18 @@ class Source(ABC):
 	The \textbf{NC} category (13\%) is large enough to be a real problem for any emission estimate built on fleet composition. 
 	Month-to-month, the mix barely changes.
 
+	\newpage
 	\textbf{Fleet composition by Euro standard} \\
 	\begin{figure}[H]
 		\centering
-		\begin{minipage}{0.49\textwidth}
-			\centering
-			\includegraphics[width=\textwidth]{./images/3_traffic/fleet_composition_by_euro_monthly.png}
-			\caption{Monthly fleet composition by Euro standard.}
-		\end{minipage}
-		\hfill
-		\begin{minipage}{0.49\textwidth}
-			\centering
-			\includegraphics[width=\textwidth]{./images/3_traffic/total_accesses_by_euro.png}
-			\caption{Total accesses by Euro standard.}
-		\end{minipage}
+		\includegraphics[width=0.8\textwidth]{./images/3_traffic/fleet_composition_by_euro_monthly.png}
+		\caption{Monthly fleet composition by Euro standard.}
+	\end{figure}
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\textwidth]{./images/3_traffic/total_accesses_by_euro.png}
+		\caption{Total accesses by Euro standard.}
 	\end{figure}
 	
 	\textbf{Euro 6} vehicles make up over 55\% of accesses, a direct consequence of progressive urban access bans pushing fleet renewal.
